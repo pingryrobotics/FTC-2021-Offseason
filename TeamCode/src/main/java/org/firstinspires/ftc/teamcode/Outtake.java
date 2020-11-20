@@ -17,7 +17,7 @@ public class Outtake {
             flywheel.setPower(0.9);
         }
         else if(goal.equals("middle")){
-            flywheel.setPower(0.6);
+            flywheel.setPower(0.61);
         }
         else{
             flywheel.setPower(0.3);
