@@ -4,14 +4,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Outtake {
-    private DcMotor flywheel;
-    private Servo feeder;
+public class WobbleMech {
+    private DcMotor motor;
+    private Servo servo;
     //private Servo feeder;
-    public Outtake(HardwareMap hardwareMap){
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-        feeder = hardwareMap.get(Servo.class, "feeder"); //We might use this as a way for us to add an additional feed into the flywheel
+    public WobbleMech(HardwareMap hardwareMap){
+        motor = hardwareMap.get(DcMotor.class, "wobbleMotor");
+        servo = hardwareMap.get(Servo.class, "wobbleServo");
     }
+
+    
 
     public void outtake(String goal){
         if(goal.equals("high")){

@@ -99,6 +99,10 @@ public class AutoBlue extends LinearOpMode {
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false  ;
 
+
+    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Quad";
+    private static final String LABEL_SECOND_ELEMENT = "Single";
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -126,6 +130,8 @@ public class AutoBlue extends LinearOpMode {
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
 
+    public TFObjectDetector tfod;
+
     /**
      * This is the webcam we are to use. As with other hardware devices such as motors and
      * servos, this device is identified using the robot configuration tool in the FTC application.
@@ -137,11 +143,21 @@ public class AutoBlue extends LinearOpMode {
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
+    private MecanumDriver mecanumDrive;
+
+    // Variable of which square for autonomous (A,B,C), (1,2,3) respectivelly
+    private int square = 0;
+
     @Override public void runOpMode() {
         /*
          * Retrieve the camera we are to use.
          */
+
+        initVuforia();
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //Create new Mecanum Drive for encoder movement.
+        mecanumDrive = new MecanumDrive(hardwareMap);
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -271,92 +287,251 @@ public class AutoBlue extends LinearOpMode {
 
         //waitForStart();
 
-        // Note: To use the remote camera preview:
-        // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
-        // Tap the preview window to receive a fresh image.
+
+        // First the amount of rings are found using the get rings function
+        // The square variable is updated to the A,B, or C square
+        int rings = getRings();
+
+        if(rings == 4)
+        {
+          square = 3;
+        }
+
+        else if(rings == 1)
+        {
+          square = 2;
+        }
+
+        else
+        {
+          square = 1;
+        }
+
+
+
+        // Now we make a case for each of the squares.
+        // -----------SQUARE A-------------
+
+        // the distance from the front of the robot
+        // to the center of the grabber arm in inches
+        // current value is an estimate
+        goToWobble()
+
 
         targetsUltimateGoal.activate();
-        while (!isStopRequested()) {
 
-            // check all the trackable targets to see which one (if any) is visible.
-            targetVisible = false;
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
+        //DESIRED X AND Y POSITIONS (TENTATIVE --> MUST BE CHANGED)
+        int x = 10;
+        int y = 10;
 
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }
 
-            // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+        List<Float> translationRotation = new new ArrayList<Float>();
+        //First change angle
+        boolean keepGoingAngle = true;
+        int difference = 0;
+        while(keepGoing)
+        {
+          if(translationRotation[5] == 0)
+          {
+            keepGoingAngle = false;
+          }
 
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            }
-            else {
-                telemetry.addData("Visible Target", "none");
-            }
-            telemetry.update();
+          // Now caluclate the distance you have to turn
+          difference = 0 - translationRotation[5];
+
+          // turn
+          mecanumDrive.encoderTurn(difference, 0.5);
+
+          // update position
+          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
+        }
+
+        boolean keepGoingVertical = true;
+        while(keepGoingVertical)
+        {
+          if(translationRotation[1] == y)
+          {
+            keepGoingVertical = false;
+          }
+
+          // Now caluclate the distance you have to turn
+          difference = x - translationRotation[1];
+
+          // turn
+          mecanumDrive.moveEncorderStraight(difference, 0.5);
+
+          // update position
+          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
+        }
+
+
+        boolean keepGoingHorizontal = true;
+        while(keepGoingHorizontal)
+        {
+          if(translationRotation[0] == x)
+          {
+            keepGoingHorizontal = false;
+          }
+
+          // Now caluclate the distance you have to turn
+          difference = y - translationRotation[0];
+
+          // turn
+          mecanumDrive.moveEncoderStrafeRight(difference, 0.5);
+
+          // update position
+          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
         }
 
         // Disable Tracking when we are done;
         targetsUltimateGoal.deactivate();
-
     }
 
-    public OpenGLMatrix getRobotLocation(VuforiaTrackables targetsUltimateGoal, List<VuforiaTrackable> allTrackables){
-        targetsUltimateGoal.activate();
-        while (!isStopRequested()) {
+    public List<Float> getRobotLocation(VuforiaTrackables targetsUltimateGoal, List<VuforiaTrackable> allTrackables){
 
-            // check all the trackable targets to see which one (if any) is visible.
-            targetVisible = false;
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
+          // check all the trackable targets to see which one (if any) is visible.
+          targetVisible = false;
+          for (VuforiaTrackable trackable : allTrackables) {
+              if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                  telemetry.addData("Visible Target", trackable.getName());
+                  targetVisible = true;
+                  // getUpdatedRobotLocation() will return null if no new information is available since
+                  // the last time that call was made, or if the trackable is not currently visible.
+                  OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                  if (robotLocationTransform != null) {
+                      lastLocation = robotLocationTransform;
+                  }
+                  break;
+              }
+          }
 
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }
+          // Provide feedback as to where the robot is located (if we know).
+          if (targetVisible) {
+              // express position (translation) of robot in inches.
+              VectorF translation = lastLocation.getTranslation();
+              telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                      translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
-            // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+              // express the rotation of the robot in degrees.
+              Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+              telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+          }
+          else {
+              telemetry.addData("Visible Target", "none");
+          }
+          telemetry.update();
 
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            }
-            else {
-                telemetry.addData("Visible Target", "none");
-            }
-            telemetry.update();
+          // Make a new list of floats to store all 6 values in 1.
+          List<Float> translationRotation = new ArrayList<Flaot>();
+          translationRotation.add(translation.get(0) / mmPerInch);
+          translationRotation.add(translation.get(1) / mmPerInch);
+          translationRotation.add(translation.get(2) / mmPerInch);
+          translationRotation.add(rotation.firstAngle);
+          translationRotation.add(rotation.secondAngle);
+          translationRotation.add(rotation.thirdAngle);
+
+          return translationRotation;
+    }
+
+    public int getRings()
+    {
+      int numRings = 0;
+      if (tfod != null) {
+            tfod.activate();
+
+            // The TensorFlow software will scale the input images from the camera to a lower resolution.
+            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+            // should be set to the value of the images used to create the TensorFlow Object Detection model
+            // (typically 1.78 or 16/9).
+
+            // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
+            //tfod.setZoom(2.5, 1.78);
         }
 
-        // Disable Tracking when we are done;
-        targetsUltimateGoal.deactivate();
-        return lastLocation;
+        /** Wait for the game to begin */
+        if(opModeisActive)
+        {
+          List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                  if (updatedRecognitions != null) {
+                      telemetry.addData("# Object Detected", updatedRecognitions.size());
+                      // step through the list of recognitions and display boundary info.
+                      }
+                      telemetry.update();
+                      numRings = updatedRecognitions.size();
+                  }
+        }
+        return numRings;
     }
+
+    // moves to the specified square
+    private void moveToWobbleSquare(int square) {
+      lengthToGrabber = 6;
+      // forward distance to center of square
+      double[] distanceToSquare = {82.625, 106, 125.875};
+      distanceForward = distanceToSquare[square-1];
+      power = 0.5;
+      strafeDistance = -6;
+      mecanumDrive.moveEncorderStraight(distance, power);
+      mecanumDrive.moveEncoderStrafeRight(strafeDistance, 0.5);
+
+
+      //
+      // if(square == 1)
+      // {
+      //   // First go straight to the square
+      //   mecanumDrive.moveEncorderStraight(82.625, 0.5);
+      //
+      //   // Then turn -90 degrees.
+      //   // mecanumDrive.encoderTurn(-90, 0.5);
+      //   // move left about 5 inches
+      //   mecanumDrive.moveEncoderStrafeRight(-5., 0.5);
+      //
+      //   // This is an estimate, but then go forward ten inches.
+      //   // mecanumDrive.moveEncorderStraight(5, 0.5);
+      //
+      //   // The wobble now has to be left there, so it should go
+      //   mecanumDrive.moveEncorderStraight(-5, 0.5);
+      // }
+      //
+      // else if(square == 2)
+      // {
+      //   // First go straight to the square
+      //   mecanumDrive.moveEncorderStraight(106, 0.5);
+      //
+      //   // Then turn -90 degrees.
+      //   mecanumDrive.encoderTurn(90, 0.5);
+      //
+      //   // This is an estimate, but then go forward ten inches.
+      //   mecanumDrive.moveEncorderStraight(5, 0.5);
+      //
+      //   // The wobble now has to be left there, so it should go
+      //   mecanumDrive.moveEncorderStraight(-5, 0.5);
+      // }
+      //
+      // else if(square == 3)
+      // {
+      //   // First go straight to the square
+      //   mecanumDrive.moveEncorderStraight(125.875, 0.5);
+      //
+      //   // Then turn -90 degrees.
+      //   mecanumDrive.encoderTurn(-90, 0.5);
+      //
+      //   // This is an estimate, but then go forward ten inches.
+      //   mecanumDrive.moveEncorderStraight(5, 0.5);
+      //
+      //   // The wobble now has to be left there, so it should go
+      //   mecanumDrive.moveEncorderStraight(-5, 0.5);
+      // }
+    }
+
+    private void initTfod() {
+       int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+               "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+       TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+       tfodParameters.minResultConfidence = 0.8f;
+       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+   }
 }

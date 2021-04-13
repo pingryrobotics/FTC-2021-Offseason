@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
     private DcMotor intakeMotor;
-
+    private DcMotor secondIntakeMotor;
     public Intake(HardwareMap hardwareMap){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
-
+        secondIntakeMotor = hardwareMap.get(DcMotor.class, "secondIntake");
     }
 
     public void intake_in(){
