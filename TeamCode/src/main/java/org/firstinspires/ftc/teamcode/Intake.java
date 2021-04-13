@@ -11,15 +11,34 @@ public class Intake {
         secondIntakeMotor = hardwareMap.get(DcMotor.class, "secondIntake");
     }
 
-    public void intake_in(){
+    public void intake_in_both(){
+        intake_in_first();
+        intake_in_second();
+    }
+
+    public void intake_out_both(){
+        intake_out_first();
+        intake_out_second();
+    }
+
+    public void intake_in_first(){
         intakeMotor.setPower(0.8);
     }
 
-    public void intake_out(){
+    public void intake_in_second(){
+        secondIntakeMotor.setPower(0.8);
+    }
+
+    public void intake_out_first(){
         intakeMotor.setPower(-0.8);
+    }
+
+    public void intake_out_second(){
+        secondIntakeMotor.setPower(-0.8);
     }
 
     public void stop(){
         intakeMotor.setPower(0);
+        secondIntakeMotor.setPower(0);
     }
 }
