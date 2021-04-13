@@ -11,38 +11,25 @@ public class WobbleMech {
     public WobbleMech(HardwareMap hardwareMap){
         motor = hardwareMap.get(DcMotor.class, "wobbleMotor");
         servo = hardwareMap.get(Servo.class, "wobbleServo");
+        servo.scaleRange(0, .25);
     }
 
-    
-
-    public void outtake(String goal){
-        if(goal.equals("high")){
-            flywheel.setPower(0.9);
-        }
-        else if(goal.equals("middle")){
-            flywheel.setPower(0.6);
-        }
-        else{
-            flywheel.setPower(0.3);
-        }
-
-        feeder.scaleRange(0, .25);
-    }
-    public void outtake(){
-        flywheel.setPower(0.8);
-    }
-    public void outtake_in(){
-        flywheel.setPower(0.2);
+    public void up(){
+      motor.setTargetPosition(1.25);
+      motor.RUN_TO_POSITION();
     }
 
-    public void pushRing()
-    {
-      feeder.setPosition(1.0);
-      feeder.setPosition(0.0);
+    public void down(){
+      motor.setTargetPosition(0);
+      motor.RUN_TO_POSITION();
     }
 
-    public void stop(){
-        flywheel.setPower(0);
+    public void grab(){
+      servo.setPosition(1.0);
+
     }
 
+    public void letGo(){
+      servo.setPosition(0.0);
+    }
 }

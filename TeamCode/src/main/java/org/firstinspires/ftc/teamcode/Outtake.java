@@ -11,6 +11,7 @@ public class Outtake {
     public Outtake(HardwareMap hardwareMap){
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         feeder = hardwareMap.get(Servo.class, "feeder"); //We might use this as a way for us to add an additional feed into the flywheel
+        feeder.scaleRange(0, .25);
     }
 
     public void outtake(String goal){
@@ -23,20 +24,26 @@ public class Outtake {
         else{
             flywheel.setPower(0.3);
         }
-
-        feeder.scaleRange(0, .25);
     }
+
     public void outtake(){
         flywheel.setPower(0.8);
     }
-    public void outtake_in(){
-        flywheel.setPower(0.2);
-    }
+
+    //public void outtake_in(){
+    //    flywheel.setPower(0.2);
+    //}
 
     public void pushRing()
     {
       feeder.setPosition(1.0);
       feeder.setPosition(0.0);
+    }
+
+    public void shootAndPushRingsStop()
+    {
+      pushRing();
+      stop();
     }
 
     public void stop(){
