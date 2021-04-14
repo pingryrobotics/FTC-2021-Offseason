@@ -61,8 +61,9 @@ public class DriveMain extends OpMode
     private MecanumDrive mecanumDrive;
     private int offsetAngle;
     private Outtake outtake;
-    private Ramp ramp;
+    private WobbleMech wobbleMech;
     private Intake intake;
+    private boolean[] previousButtonStates;
 
 
     /*
@@ -70,13 +71,14 @@ public class DriveMain extends OpMode
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initializing");
         mecanumDrive = new MecanumDrive(hardwareMap);
         outtake = new Outtake(hardwareMap);
-        ramp = new Ramp(hardwareMap);
-        intake =new Intake(hardwareMap);
+        intake = new Intake(hardwareMap);
+        wobbleMech = new wobbleMech(hardwareMap);
         runtime = new ElapsedTime();
-        int offsetAngle = 0;
+        offsetAngle = 0;
+        previousButtonStates = updateButtonList();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -104,18 +106,21 @@ public class DriveMain extends OpMode
         runtime.reset();
     }
 
+
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
+
+        boolean[] currentButtonStates = updateButtonList();
         // Setup a variable for each drive wheel to save power level for telemetry
 
         // Show the elapsed game time and wheel power.
-        double speed = 0.6;
-        if(gamepad1.right_trigger > 0.5){
-            speed += (1-speed)*(2*(gamepad1.right_trigger - 0.5));
-        }
+        double speed = 0.5;
+        //if(gamepad1.right_trigger > 0.5){
+        //    speed += (1-speed)*(2*(gamepad1.right_trigger - 0.5));
+        //}
         double magnitude = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
         double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
         telemetry.addData("robot angle", robotAngle);
@@ -124,21 +129,84 @@ public class DriveMain extends OpMode
         mecanumDrive.polarMove(robotAngle, rightX, speed * magnitude);
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();
-        if(gamepad1.a){
-            intake.intake_in();
+
+        // Turn flywheel on
+
+
+        if (previousButtonStates[0] != currentButtonStates[0]) {
+            if (currentButtonStates[0]) {
+              intake.intake_in_both();
+            } else {
+              intake.stop();
+            }
+        } else if (previousButtonStates[1] != currentButtonStates[1]) {
+            if (currentButtonStates[1]) {
+              outtake.pushRing();
+            }
+        } else if (previousButtonStates[2] != currentButtonStates[2]) {
+            if (currentButtonStates[2]) {
+              wobbleMech.letGo();
+              wobbleMech.grab();
+            }
+        } else if (previousButtonStates[4] != currentButtonSteat[4]) {
+
         }
-        else if(gamepad1.b){
-            intake.intake_out();
-        }
-        else if(gamepad1.x){
-            ramp.upRamp();
-        }
-        else if(gamepad1.right_bumper){
-            ramp.downRamp();
-        }
-        else if(gamepad1.left_bumper){
-            outtake.outtake();
-        }
+
+        previousButtonStates = updateButtonList();
+        // if(gamepad1.a){
+        //     intake.intake_in();
+        // }
+        // else if(gamepad1.b){
+        //     intake.intake_out();
+        // }
+        // else if(gamepad1.x){
+        //     ramp.upRamp();
+        // }
+        // else if(gamepad1.right_bumper){
+        //     ramp.downRamp();
+        // }
+        // else if(gamepad1.left_bumper){
+        //     outtake.outtake();
+        // }
+    }
+    /*
+    Controls:
+    left bumper - intake
+    right bumper - push servo + outtake + retract servo
+
+
+    left joystck - movement
+    right joystick - direction
+
+    a, b, x, y: automations
+
+    up, down, left, right: backups
+    up - push servo
+    down - retract servo
+
+    */
+
+    /**
+    Updates button list
+    */
+    public boolean[] updateButtonList() {
+        // Array with Button values order
+        // Left Trigger, Right trigger, x, y, left_bumper, right_bumper, b, back
+        boolean[] buttonList = {
+          // main controls
+          (gamepad1.left_trigger > 0), // intake
+          (gamepad1.right_trigger > 0), // shoot
+          gamepad1.x, // open wobble grabber
+          gamepad1.y, // close wobble
+          gamepad1.left_bumper, // bring arm up
+          gamepad1.right_bumper, // bring arm down
+          gamepad1.a, // turn flywheel on
+          gamepad1.b, // turn flywheel off
+          // gamepad1.back,
+          gamepad1.dpad_down // reverse intake
+        };
+
+        return buttonList;
     }
 
     /*
