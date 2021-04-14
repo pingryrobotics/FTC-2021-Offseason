@@ -146,13 +146,36 @@ public class DriveMain extends OpMode
         } else if (previousButtonStates[2] != currentButtonStates[2]) {
             if (currentButtonStates[2]) {
               wobbleMech.letGo();
+            }
+        } else if(previousButtonStates[3] != currentButtonStates[3]) {
+            if (currentButtonStates[3]) {
               wobbleMech.grab();
             }
-        } else if (previousButtonStates[4] != currentButtonSteat[4]) {
-
+        } else if (previousButtonStates[4] != currentButtonStates[4]) {
+          if (currentButtonStates[4]){
+            wobbleMech.up();
+          }
+        } else if (previousButtonStates[5] != currentButtonStates[5]) {
+          if (currentButtonStates[5]) {
+            wobbleMech.down();
+          }
+        } else if (previousButtonStates[6] != currentButtonStates[6]) {
+          if(currentButtonStates[6]){
+            outtake.outtake();
+          }
+        } else if (previousButtonStates[7] != currentButtonStates[7]) {
+          if (currentButtonStates[7]) {
+            outtake.stop();
+          }
+        } else if (previousButtonStates[8] != currentButtonStates[8]) {
+          if (currentButtonStates[8]) {
+            intake.intake_out_both();
+          } else {
+            intake.stop();
+          }
         }
 
-        previousButtonStates = updateButtonList();
+        previousButtonStates = currentButtonStates;
         // if(gamepad1.a){
         //     intake.intake_in();
         // }
@@ -218,6 +241,7 @@ public class DriveMain extends OpMode
         intake.stop();
         outtake.stop();
         ramp.stop();
+        wobbleMech.stop();
     }
 
 }
