@@ -41,6 +41,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +146,7 @@ public class AutoBlue extends LinearOpMode {
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
-    private MecanumDriver mecanumDrive;
+    private MecanumDrive mecanumDrive;
 
     // Variable of which square for autonomous (A,B,C), (1,2,3) respectivelly
     private int square = 0;
@@ -315,7 +318,7 @@ public class AutoBlue extends LinearOpMode {
         // the distance from the front of the robot
         // to the center of the grabber arm in inches
         // current value is an estimate
-        goToWobble()
+//        goToWobble();
 
 
         targetsUltimateGoal.activate();
@@ -325,19 +328,19 @@ public class AutoBlue extends LinearOpMode {
         int y = 10;
 
 
-        List<Float> translationRotation = new new ArrayList<Float>();
+        List<Float> translationRotation = new ArrayList<Float>();
         //First change angle
         boolean keepGoingAngle = true;
-        int difference = 0;
-        while(keepGoing)
+        double difference = 0;
+        while(keepGoingAngle)
         {
-          if(translationRotation[5] == 0)
+          if(translationRotation.get(5) == 0)
           {
             keepGoingAngle = false;
           }
 
-          // Now caluclate the distance you have to turn
-          difference = 0 - translationRotation[5];
+            // Now caluclate the distance you have to turn
+            difference = 0 - translationRotation.get(5);
 
           // turn
           mecanumDrive.encoderTurn(difference, 0.5);
@@ -349,16 +352,16 @@ public class AutoBlue extends LinearOpMode {
         boolean keepGoingVertical = true;
         while(keepGoingVertical)
         {
-          if(translationRotation[1] == y)
+          if(translationRotation.get(1) == y)
           {
             keepGoingVertical = false;
           }
 
           // Now caluclate the distance you have to turn
-          difference = x - translationRotation[1];
+          difference = x - translationRotation.get(1);
 
           // turn
-          mecanumDrive.moveEncorderStraight(difference, 0.5);
+          mecanumDrive.moveEncoderStraight(difference, 0.5);
 
           // update position
           translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
@@ -368,13 +371,13 @@ public class AutoBlue extends LinearOpMode {
         boolean keepGoingHorizontal = true;
         while(keepGoingHorizontal)
         {
-          if(translationRotation[0] == x)
+          if(translationRotation.get(0) == x)
           {
             keepGoingHorizontal = false;
           }
 
           // Now caluclate the distance you have to turn
-          difference = y - translationRotation[0];
+          difference = y - translationRotation.get(0);
 
           // turn
           mecanumDrive.moveEncoderStrafeRight(difference, 0.5);
@@ -404,16 +407,17 @@ public class AutoBlue extends LinearOpMode {
                   break;
               }
           }
-
+        VectorF translation = lastLocation.getTranslation();
+        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
           // Provide feedback as to where the robot is located (if we know).
           if (targetVisible) {
               // express position (translation) of robot in inches.
-              VectorF translation = lastLocation.getTranslation();
+
               telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                       translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
               // express the rotation of the robot in degrees.
-              Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+
               telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
           }
           else {
@@ -422,7 +426,7 @@ public class AutoBlue extends LinearOpMode {
           telemetry.update();
 
           // Make a new list of floats to store all 6 values in 1.
-          List<Float> translationRotation = new ArrayList<Flaot>();
+          List<Float> translationRotation = new ArrayList<Float>();
           translationRotation.add(translation.get(0) / mmPerInch);
           translationRotation.add(translation.get(1) / mmPerInch);
           translationRotation.add(translation.get(2) / mmPerInch);
@@ -447,33 +451,32 @@ public class AutoBlue extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            //tfod.setZoom(2.5, 1.78);
+            //tfod.setZoom(2.5, 1.78)
         }
 
         /** Wait for the game to begin */
-        if(opModeisActive)
+        // @note opModeisActive was here before but it wasnt working so its gone for now
+        if(true)
         {
           List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                  if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      }
-                      telemetry.update();
-                      numRings = updatedRecognitions.size();
-                  }
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                // step through the list of recognitions and display boundary info.
+            }
+            telemetry.update();
+            numRings = updatedRecognitions.size();
         }
         return numRings;
     }
 
     // moves to the specified square
     private void moveToWobbleSquare(int square) {
-      lengthToGrabber = 6;
+      float lengthToGrabber = 6;
       // forward distance to center of square
       double[] distanceToSquare = {82.625, 106, 125.875};
-      distanceForward = distanceToSquare[square-1];
-      power = 0.5;
-      strafeDistance = -6;
-      mecanumDrive.moveEncorderStraight(distance, power);
+      double power = 0.5;
+      float strafeDistance = -6;
+      mecanumDrive.moveEncoderStraight(distanceToSquare[square-1], power);
       mecanumDrive.moveEncoderStrafeRight(strafeDistance, 0.5);
 
 
@@ -531,7 +534,26 @@ public class AutoBlue extends LinearOpMode {
                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
        tfodParameters.minResultConfidence = 0.8f;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        TFObjectDetector tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
    }
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
 }
