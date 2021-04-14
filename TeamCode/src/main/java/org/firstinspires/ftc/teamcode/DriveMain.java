@@ -75,7 +75,7 @@ public class DriveMain extends OpMode
         mecanumDrive = new MecanumDrive(hardwareMap);
         outtake = new Outtake(hardwareMap);
         intake = new Intake(hardwareMap);
-        wobbleMech = new wobbleMech(hardwareMap);
+        wobbleMech = new WobbleMech(hardwareMap);
         runtime = new ElapsedTime();
         offsetAngle = 0;
         previousButtonStates = updateButtonList();
@@ -240,7 +240,6 @@ public class DriveMain extends OpMode
         mecanumDrive.brake();
         intake.stop();
         outtake.stop();
-        ramp.stop();
         wobbleMech.stop();
     }
 
