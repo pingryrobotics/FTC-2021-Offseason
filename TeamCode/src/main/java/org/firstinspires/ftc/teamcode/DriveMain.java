@@ -51,6 +51,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+/*
+    Upload to robot:
+    1. connect to robot wifi (6069 RC)
+    2. Tools > External Tools > ADB Connect
+        - make sure device says REV Robotics control hub v1.0 or something
+    3. Green play button (run button)
+ */
+
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
 @Disabled
 public class DriveMain extends OpMode
