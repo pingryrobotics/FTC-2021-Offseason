@@ -134,10 +134,10 @@ public class MecanumDrive {
         final double v3 = power * Math.sin(angle) + turn;
         final double v4 = power * Math.cos(angle) - turn;
 
-        leftFront.setPower(v1);
-        rightFront.setPower(v2);
-        leftRear.setPower(v3);
-        rightRear.setPower(v4);
+        leftFront.setPower(-1 * v1 + 2);
+        rightFront.setPower(-1 * v2);
+        leftRear.setPower(-1 * v3);
+        rightRear.setPower(-1 * v4);
     }
     public void brake(){
         leftFront.setPower(0);

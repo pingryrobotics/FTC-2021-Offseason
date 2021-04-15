@@ -455,7 +455,6 @@ public class AutoBlue extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-        // @note opModeisActive was here before but it wasnt working so its gone for now
         if(opModeIsActive())
         {
           List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();

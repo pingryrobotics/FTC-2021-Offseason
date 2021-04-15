@@ -59,8 +59,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
     3. Green play button (run button)
  */
 
+/*
+    Issues:
+    - intake power too low
+    - movement are inverted
+    - right trigger not working
+    - servos not working
+
+    Wheel issues:
+    - front left wheel spinning slowly
+    - other wheel spinning weirdly
+ */
+
+
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-@Disabled
 public class DriveMain extends OpMode
 {
     // Declare OpMode members.
@@ -129,6 +141,7 @@ public class DriveMain extends OpMode
         //if(gamepad1.right_trigger > 0.5){
         //    speed += (1-speed)*(2*(gamepad1.right_trigger - 0.5));
         //}
+
         double magnitude = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
         double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
         telemetry.addData("robot angle", robotAngle);
@@ -151,6 +164,8 @@ public class DriveMain extends OpMode
             if (currentButtonStates[1]) {
               outtake.pushRing();
             }
+        } else if (outtake.isPositionReached()) {
+            outtake.retract();
         } else if (previousButtonStates[2] != currentButtonStates[2]) {
             if (currentButtonStates[2]) {
               wobbleMech.letGo();
@@ -184,21 +199,6 @@ public class DriveMain extends OpMode
         }
 
         previousButtonStates = currentButtonStates;
-        // if(gamepad1.a){
-        //     intake.intake_in();
-        // }
-        // else if(gamepad1.b){
-        //     intake.intake_out();
-        // }
-        // else if(gamepad1.x){
-        //     ramp.upRamp();
-        // }
-        // else if(gamepad1.right_bumper){
-        //     ramp.downRamp();
-        // }
-        // else if(gamepad1.left_bumper){
-        //     outtake.outtake();
-        // }
     }
     /*
     Controls:

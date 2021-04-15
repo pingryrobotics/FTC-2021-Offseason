@@ -6,9 +6,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Intake {
     private DcMotor intakeMotor;
     private DcMotor secondIntakeMotor;
+    private double power;
     public Intake(HardwareMap hardwareMap){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         secondIntakeMotor = hardwareMap.get(DcMotor.class, "secondIntake");
+        secondIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        power = 1;
     }
 
     public void intake_in_both(){
@@ -22,19 +26,19 @@ public class Intake {
     }
 
     public void intake_in_first(){
-        intakeMotor.setPower(0.8);
+        intakeMotor.setPower(power * -1);
     }
 
     public void intake_in_second(){
-        secondIntakeMotor.setPower(0.8);
+        secondIntakeMotor.setPower(power);
     }
 
     public void intake_out_first(){
-        intakeMotor.setPower(-0.8);
+        intakeMotor.setPower(power);
     }
 
     public void intake_out_second(){
-        secondIntakeMotor.setPower(-0.8);
+        secondIntakeMotor.setPower(power * -1);
     }
 
     public void stop(){

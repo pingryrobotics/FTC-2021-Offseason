@@ -7,11 +7,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Outtake {
     private DcMotor flywheel;
     private Servo feeder;
+    private double targetPosition;
+    private boolean isMoving;
     //private Servo feeder;
     public Outtake(HardwareMap hardwareMap){
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         feeder = hardwareMap.get(Servo.class, "feeder"); //We might use this as a way for us to add an additional feed into the flywheel
         feeder.scaleRange(0, .25);
+        feeder.setDirection(Servo.Direction.FORWARD);
+        targetPosition = 0;
     }
 
     public void outtake(String goal){
@@ -27,18 +32,36 @@ public class Outtake {
     }
 
     public void outtake(){
+
         flywheel.setPower(0.8);
     }
 
-    //public void outtake_in(){
-    //    flywheel.setPower(0.2);
-    //}
+    public void outtake_in(){
+        flywheel.setPower(0.2);
+    }
 
     public void pushRing()
     {
       feeder.setPosition(1.0);
-      feeder.setPosition(0.0);
+      targetPosition = 1;
+      isMoving = true;
+//      feeder.setPosition(0.0);
     }
+
+    public void retract() {
+        feeder.setPosition(0);
+        targetPosition = 0;
+        isMoving = true;
+    }
+
+    public boolean isPositionReached() {
+        if (feeder.getPosition() == targetPosition && isMoving) {
+            isMoving = false;
+            return true;
+        }
+        return false;
+    }
+
 
     public void shootAndPushRingsStop()
     {
@@ -47,6 +70,7 @@ public class Outtake {
     }
 
     public void stop(){
+
         flywheel.setPower(0);
     }
 
