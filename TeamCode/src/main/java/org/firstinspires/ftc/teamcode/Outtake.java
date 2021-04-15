@@ -32,7 +32,6 @@ public class Outtake {
     }
 
     public void outtake(){
-
         flywheel.setPower(0.8);
     }
 
