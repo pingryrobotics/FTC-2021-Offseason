@@ -159,7 +159,7 @@ public class DriveMain extends OpMode
         telemetry.addData("robot angle", robotAngle);
         robotAngle += offsetAngle / 180.0 * Math.PI;
         double rightX = -gamepad1.right_stick_x;
-        mecanumDrive.polarMove(robotAngle, rightX, direc * speed * magnitude);
+        mecanumDrive.polarMove(robotAngle, rightX, 0.8 * direc * speed * magnitude);
         //telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Position", wobbleMech.getPosition());
 //        System.out.println(wobbleMech.getTargetPosition());
