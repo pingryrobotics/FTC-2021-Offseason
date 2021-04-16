@@ -8,9 +8,9 @@ public class Intake {
     private DcMotor secondIntakeMotor;
     private double power;
     public Intake(HardwareMap hardwareMap){
-        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeLower");
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        secondIntakeMotor = hardwareMap.get(DcMotor.class, "secondIntake");
+        secondIntakeMotor = hardwareMap.get(DcMotor.class, "intakeUpper");
         secondIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         power = 1;
     }

@@ -14,7 +14,7 @@ public class Outtake {
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         feeder = hardwareMap.get(Servo.class, "feeder"); //We might use this as a way for us to add an additional feed into the flywheel
-        feeder.scaleRange(0, .25);
+        feeder.scaleRange(0, .5);
         feeder.setDirection(Servo.Direction.FORWARD);
         targetPosition = 0;
     }
@@ -32,7 +32,6 @@ public class Outtake {
     }
 
     public void outtake(){
-
         flywheel.setPower(0.8);
     }
 
@@ -43,24 +42,24 @@ public class Outtake {
     public void pushRing()
     {
       feeder.setPosition(1.0);
-      targetPosition = 1;
-      isMoving = true;
+//      targetPosition = 1;
+//      isMoving = true;
 //      feeder.setPosition(0.0);
     }
 
     public void retract() {
         feeder.setPosition(0);
-        targetPosition = 0;
-        isMoving = true;
+//        targetPosition = 0;
+//        isMoving = true;
     }
 
-    public boolean isPositionReached() {
-        if (feeder.getPosition() == targetPosition && isMoving) {
-            isMoving = false;
-            return true;
-        }
-        return false;
-    }
+//    public boolean isPositionReached() {
+//        if (feeder.getPosition() == targetPosition && isMoving) {
+//            isMoving = false;
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     public void shootAndPushRingsStop()
@@ -70,8 +69,6 @@ public class Outtake {
     }
 
     public void stop(){
-
         flywheel.setPower(0);
     }
-
 }

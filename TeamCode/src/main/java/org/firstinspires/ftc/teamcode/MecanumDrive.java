@@ -134,7 +134,7 @@ public class MecanumDrive {
         final double v3 = power * Math.sin(angle) + turn;
         final double v4 = power * Math.cos(angle) - turn;
 
-        leftFront.setPower(-1 * v1 + 2);
+        leftFront.setPower(-1 * v1);
         rightFront.setPower(-1 * v2);
         leftRear.setPower(-1 * v3);
         rightRear.setPower(-1 * v4);

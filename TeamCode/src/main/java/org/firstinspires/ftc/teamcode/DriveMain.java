@@ -57,6 +57,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
     2. Tools > External Tools > ADB Connect
         - make sure device says REV Robotics control hub v1.0 or something
     3. Green play button (run button)
+
+    Open robot output logs (android studio):
+    1. hit little box square in verryyy bottom left corner
+    2. hit run
+
+    Error fixes:
+        - ERROR: "Motor must be set to a target position before setting to RUN_TO_POSITION"
+        - FIX:
+            1. restart robot, restart app
+            2. make sure all motors have a run mode set
  */
 
 /*
@@ -149,48 +159,54 @@ public class DriveMain extends OpMode
         double rightX = -gamepad1.right_stick_x;
         mecanumDrive.polarMove(robotAngle, rightX, speed * magnitude);
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //telemetry.addData("Position", wobbleMech.getPosition());
+//        System.out.println(wobbleMech.getTargetPosition());
+//        System.out.println(wobbleMech.getMode());
         telemetry.update();
 
-        // Turn flywheel on
 
 
-        if (previousButtonStates[0] != currentButtonStates[0]) {
+        if (previousButtonStates[0] != currentButtonStates[0]) { // intake - good
             if (currentButtonStates[0]) {
               intake.intake_in_both();
             } else {
               intake.stop();
             }
-        } else if (previousButtonStates[1] != currentButtonStates[1]) {
+        } if (previousButtonStates[1] != currentButtonStates[1]) {  // shoot - test
             if (currentButtonStates[1]) {
               outtake.pushRing();
+            } else {
+                outtake.retract();
             }
-        } else if (outtake.isPositionReached()) {
-            outtake.retract();
-        } else if (previousButtonStates[2] != currentButtonStates[2]) {
+        } if (previousButtonStates[2] != currentButtonStates[2]) { // open wobble grabber - adjust
             if (currentButtonStates[2]) {
               wobbleMech.letGo();
             }
-        } else if(previousButtonStates[3] != currentButtonStates[3]) {
+        } if(previousButtonStates[3] != currentButtonStates[3]) { // close wobble - adjust
             if (currentButtonStates[3]) {
               wobbleMech.grab();
             }
-        } else if (previousButtonStates[4] != currentButtonStates[4]) {
+        } if (previousButtonStates[4] != currentButtonStates[4]) { // bring arm up - broken
           if (currentButtonStates[4]){
             wobbleMech.up();
+          } else {
+              wobbleMech.stop();
           }
-        } else if (previousButtonStates[5] != currentButtonStates[5]) {
+        } if (previousButtonStates[5] != currentButtonStates[5]) { // bring arm down - broken
           if (currentButtonStates[5]) {
             wobbleMech.down();
+          } else {
+              wobbleMech.stop();
           }
-        } else if (previousButtonStates[6] != currentButtonStates[6]) {
+        } if (previousButtonStates[6] != currentButtonStates[6]) { // turn flywheel on - good
           if(currentButtonStates[6]){
             outtake.outtake();
           }
-        } else if (previousButtonStates[7] != currentButtonStates[7]) {
+        } if (previousButtonStates[7] != currentButtonStates[7]) { // turn flywheel off - good
           if (currentButtonStates[7]) {
             outtake.stop();
           }
-        } else if (previousButtonStates[8] != currentButtonStates[8]) {
+        } if (previousButtonStates[8] != currentButtonStates[8]) {// reverse intake - good
           if (currentButtonStates[8]) {
             intake.intake_out_both();
           } else {
