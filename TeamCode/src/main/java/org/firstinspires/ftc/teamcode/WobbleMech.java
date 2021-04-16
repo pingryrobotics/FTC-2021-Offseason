@@ -24,7 +24,7 @@ public class WobbleMech {
         position = getPosition();
     }
 
-    public void up(){
+    public void up() { // currently moves when button is pressed and stops when button is released, maybe for auto we can move it a certain number of ticks?
         //wobbleMotor.setTargetPosition(1);
         //974
         //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -36,18 +36,18 @@ public class WobbleMech {
         //974
         //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbleMotor.setPower(0.5);
-//      System.out.println("running");
     }
 
-    public void grab(){
+    public void grab() {
       servo.setPosition(1.0);
     }
 
-    public int getPosition(){return wobbleMotor.getCurrentPosition();}
-
-    public void letGo(){
+    public void letGo() {
         servo.setPosition(0.0);
     }
+
+	// public int getPosition(){return wobbleMotor.getCurrentPosition();}
+
 //    public void checkPosition() {
 //        if (isMoving && getPosition() >= targetPosition) {
 //            isMoving = false;
@@ -55,14 +55,14 @@ public class WobbleMech {
 //        }
 //    }
 
-    public String getMode() {
-        String mode = wobbleMotor.getMode() + "";
-        return mode;
-    }
+    // public String getMode() {
+    //     String mode = wobbleMotor.getMode() + "";
+    //     return mode;
+    // }
 
-    public int getTargetPosition() {
-        return wobbleMotor.getTargetPosition();
-    }
+    // public int getTargetPosition() {
+    //     return wobbleMotor.getTargetPosition();
+    // }
 
     public void stop() {
         wobbleMotor.setPower(0);

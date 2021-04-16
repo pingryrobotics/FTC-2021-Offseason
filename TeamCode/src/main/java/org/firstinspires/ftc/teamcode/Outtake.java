@@ -10,7 +10,7 @@ public class Outtake {
     private double targetPosition;
     private boolean isMoving;
     //private Servo feeder;
-    public Outtake(HardwareMap hardwareMap){
+    public Outtake(HardwareMap hardwareMap) {
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         feeder = hardwareMap.get(Servo.class, "feeder"); //We might use this as a way for us to add an additional feed into the flywheel
@@ -19,11 +19,11 @@ public class Outtake {
         targetPosition = 0;
     }
 
-    public void outtake(String goal){
+    public void outtake(String goal) {
         if(goal.equals("high")){
             flywheel.setPower(0.9);
         }
-        else if(goal.equals("middle")){
+        else if(goal.equals("middle")) {
             flywheel.setPower(0.6);
         }
         else{
@@ -31,25 +31,21 @@ public class Outtake {
         }
     }
 
-    public void outtake(){
+    public void outtake() {
         flywheel.setPower(0.8);
     }
 
-    public void outtake_in(){
-        flywheel.setPower(0.2);
+    public void outtake_in() {
+        flywheel.setPower(-0.2);
     }
 
-    public void pushRing()
-    {
+    public void pushRing() {
       feeder.setPosition(1.0);
-      targetPosition = 1;
       isMoving = true;
-//      feeder.setPosition(0.0);
     }
 
     public void retract() {
         feeder.setPosition(0);
-        targetPosition = 0;
         isMoving = true;
     }
 
@@ -62,8 +58,7 @@ public class Outtake {
     }
 
 
-    public void shootAndPushRingsStop()
-    {
+    public void shootAndPushRingsStop() {
       pushRing();
       stop();
     }
