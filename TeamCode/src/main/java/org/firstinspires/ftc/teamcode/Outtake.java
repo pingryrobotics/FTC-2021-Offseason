@@ -42,7 +42,7 @@ public class Outtake {
     }
 
     public void outtake(){
-        flywheel.setPower(1.2);
+        flywheel.setPower(0.9);
     }
 
     public void outtake_in(){

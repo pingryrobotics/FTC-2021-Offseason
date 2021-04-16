@@ -177,22 +177,36 @@ public class AutoBlue extends LinearOpMode {
         Outtake outtake = new Outtake(hardwareMap);
         Intake intake = new Intake(hardwareMap);
         WobbleMech wobbleMech = new WobbleMech(hardwareMap);
-
+        wobbleMech.grab();
         outtake.outtake();
-        mecanumDrive.moveEncoderStraight(100, 0.5);
-        sleep(800);
-        mecanumDrive.moveEncoderStrafeRight(5, 0.5);
-        sleep(300);
+        //mecanumDrive.moveEncoderStraight(100, 0.5);
+        //sleep(800);
+        //mecanumDrive.moveEncoderStrafeRight(5, 0.5);
+        //sleep(300);
         //sleep(2000);
+        sleep(2000);
 
-//        for (int i = 0; i < 3; i++) {
-//            outtake.pushRing();
-//            sleep(1000);
-//            outtake.retract();
-//            sleep(1000);
-//        }
+        for (int i = 0; i < 3; i++) {
+            outtake.pushRing();
+            sleep(1000);
+            outtake.retract();
+            sleep(2000);
+        }
 
+        mecanumDrive.moveEncoderStraight(10, 0.5);
+        sleep(400);
 
+        mecanumDrive.encoderTurn(-5, 0.5);
+
+//        sleep(500);
+        mecanumDrive.moveEncoderStraight(100, 0.5);
+
+        sleep(480);
+
+        wobbleMech.down();
+        sleep(500);
+        wobbleMech.stop();
+        wobbleMech.letGo();
     }
 
     public void old() {

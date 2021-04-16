@@ -22,8 +22,8 @@ public class MecanumDrive {
     private static final double CM_PER_INCH = 2.54;
     private static final double wheelDiameterCentimeters = 10; // diameter of wheel in cm, check specs
     private static final double wheelDiameterInches = wheelDiameterCentimeters / CM_PER_INCH; // cm to Inches
-    private static final double gearboxReduction = 19.2 // reduction of gearbox, check specs
-    private static final double pulsesPerRevolution = 28 // pulses per revolution for the unreducted motor
+    private static final double gearboxReduction = 19.2; // reduction of gearbox, check specs
+    private static final double pulsesPerRevolution = 28; // pulses per revolution for the unreducted motor
     private static final double ticksPerInch = ((pulsesPerRevolution * gearboxReduction) / wheelDiameterInches) / Math.PI;
 
     public double leftMotorIsBroken = 8;
@@ -53,10 +53,10 @@ public class MecanumDrive {
 
     public void moveEncoderStrafeRight(double inches, double power){
         power = Math.abs(power);
-        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() - (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() - (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
+        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() - (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() - (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
 
         leftFront.setPower(power * leftMotorIsBroken);
         rightFront.setPower(power);
@@ -68,10 +68,10 @@ public class MecanumDrive {
 
 
         power = Math.abs(power);
-        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
-        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * ticksPerInch); // should be divided by 4 times pi times 20 times 7
+        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
+        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * ticksPerInch))); // should be divided by 4 times pi times 20 times 7
         //(inches * 3896 * 2.54 / 10 / Math.PI))
         //537.7 ticks per rotation
         //10 cm diameter
@@ -93,10 +93,10 @@ public class MecanumDrive {
         power = Math.abs(power);
 
         double inches = degrees/180 * Math.PI * 11.5;
-        int leftFrontTarget = (int) (leftFront.getCurrentPosition() - (inches * ticksPerInch;
-        int leftRearTarget = (int) (leftRear.getCurrentPosition() - (inches * ticksPerInch;
-        int rightFrontTarget = (int) (rightFront.getCurrentPosition() + (inches * ticksPerInch;
-        int rightRearTarget = (int) (rightRear.getCurrentPosition() + (inches * ticksPerInch;
+        int leftFrontTarget = (int) (leftFront.getCurrentPosition() - (inches * ticksPerInch));
+        int leftRearTarget = (int) (leftRear.getCurrentPosition() - (inches * ticksPerInch));
+        int rightFrontTarget = (int) (rightFront.getCurrentPosition() + (inches * ticksPerInch));
+        int rightRearTarget = (int) (rightRear.getCurrentPosition() + (inches * ticksPerInch));
 
         leftFront.setTargetPosition(leftFrontTarget);
         leftRear.setTargetPosition(leftRearTarget);
