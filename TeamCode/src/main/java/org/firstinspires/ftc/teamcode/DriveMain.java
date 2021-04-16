@@ -175,9 +175,9 @@ public class DriveMain extends OpMode
         } if (previousButtonStates[1] != currentButtonStates[1]) {  // shoot - test
             if (currentButtonStates[1]) {
               outtake.pushRing();
-            } else {
-                outtake.retract();
             }
+        } if (outtake.isPositionReached()) {
+            outtake.retract();
         } if (previousButtonStates[2] != currentButtonStates[2]) { // open wobble grabber - adjust
             if (currentButtonStates[2]) {
               wobbleMech.letGo();

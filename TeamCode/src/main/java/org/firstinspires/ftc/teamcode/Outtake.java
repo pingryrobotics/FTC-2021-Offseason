@@ -42,24 +42,24 @@ public class Outtake {
     public void pushRing()
     {
       feeder.setPosition(1.0);
-//      targetPosition = 1;
-//      isMoving = true;
+      targetPosition = 1;
+      isMoving = true;
 //      feeder.setPosition(0.0);
     }
 
     public void retract() {
         feeder.setPosition(0);
-//        targetPosition = 0;
-//        isMoving = true;
+        targetPosition = 0;
+        isMoving = true;
     }
 
-//    public boolean isPositionReached() {
-//        if (feeder.getPosition() == targetPosition && isMoving) {
-//            isMoving = false;
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean isPositionReached() {
+        if (feeder.getPosition() == targetPosition && isMoving) {
+            isMoving = false;
+            return true;
+        }
+        return false;
+    }
 
 
     public void shootAndPushRingsStop()
