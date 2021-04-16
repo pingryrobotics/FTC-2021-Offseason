@@ -12,7 +12,7 @@ public class Intake {
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         secondIntakeMotor = hardwareMap.get(DcMotor.class, "intakeUpper");
         secondIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        power = 1;
+        power = 1.25;
     }
 
     public void intake_in_both(){

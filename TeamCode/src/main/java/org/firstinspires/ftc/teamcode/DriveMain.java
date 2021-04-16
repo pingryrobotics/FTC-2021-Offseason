@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import java.lang.*;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -90,6 +91,7 @@ public class DriveMain extends OpMode
     private ElapsedTime runtime;
     private MecanumDrive mecanumDrive;
     private int offsetAngle;
+    private int direc;
     private Outtake outtake;
     private WobbleMech wobbleMech;
     private Intake intake;
@@ -105,9 +107,8 @@ public class DriveMain extends OpMode
         mecanumDrive = new MecanumDrive(hardwareMap);
         outtake = new Outtake(hardwareMap);
         intake = new Intake(hardwareMap);
-        wobbleMech = new WobbleMech(hardwareMap);
-        runtime = new ElapsedTime();
         offsetAngle = 0;
+        direc = 1;
         previousButtonStates = updateButtonList();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -147,7 +148,7 @@ public class DriveMain extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         // Show the elapsed game time and wheel power.
-        double speed = 0.5;
+        double speed = 0.2;
         //if(gamepad1.right_trigger > 0.5){
         //    speed += (1-speed)*(2*(gamepad1.right_trigger - 0.5));
         //}
@@ -157,7 +158,7 @@ public class DriveMain extends OpMode
         telemetry.addData("robot angle", robotAngle);
         robotAngle += offsetAngle / 180.0 * Math.PI;
         double rightX = -gamepad1.right_stick_x;
-        mecanumDrive.polarMove(robotAngle, rightX, speed * magnitude);
+        mecanumDrive.polarMove(robotAngle, rightX, direc * speed * magnitude);
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Position", wobbleMech.getPosition());
 //        System.out.println(wobbleMech.getTargetPosition());
@@ -174,11 +175,21 @@ public class DriveMain extends OpMode
             }
         } if (previousButtonStates[1] != currentButtonStates[1]) {  // shoot - test
             if (currentButtonStates[1]) {
-              outtake.pushRing();
+                outtake.pushRing();
             }
-        } if (outtake.isPositionReached()) {
-            outtake.retract();
-        } if (previousButtonStates[2] != currentButtonStates[2]) { // open wobble grabber - adjust
+            else {
+                outtake.retract();
+            }
+//              wait(100);
+//              outtake.retract();
+//            } else {
+//                outtake.retract();
+//            }
+        }
+//        if (outtake.isPositionReached()) {
+//            outtake.retract();
+//        }
+        if (previousButtonStates[2] != currentButtonStates[2]) { // open wobble grabber - adjust
             if (currentButtonStates[2]) {
               wobbleMech.letGo();
             }
@@ -212,6 +223,10 @@ public class DriveMain extends OpMode
           } else {
             intake.stop();
           }
+        } if (previousButtonStates[9] != currentButtonStates[9]) {
+            if (currentButtonStates[9]) {
+                direc *= -1;
+            }
         }
 
         previousButtonStates = currentButtonStates;
@@ -241,16 +256,17 @@ public class DriveMain extends OpMode
         // Left Trigger, Right trigger, x, y, left_bumper, right_bumper, b, back
         boolean[] buttonList = {
           // main controls
-          (gamepad1.left_trigger > 0), // intake
-          (gamepad1.right_trigger > 0), // shoot
-          gamepad1.x, // open wobble grabber
-          gamepad1.y, // close wobble
-          gamepad1.left_bumper, // bring arm up
-          gamepad1.right_bumper, // bring arm down
-          gamepad1.a, // turn flywheel on
-          gamepad1.b, // turn flywheel off
+          (gamepad2.left_trigger > 0), // intake
+          (gamepad2.right_trigger > 0), // shoot
+          gamepad2.x, // open wobble grabber
+          gamepad2.y, // close wobble
+          gamepad2.left_bumper, // bring arm up
+          gamepad2.right_bumper, // bring arm down
+          gamepad2.a, // turn flywheel on
+          gamepad2.b, // turn flywheel off
           // gamepad1.back,
-          gamepad1.dpad_down // reverse intake
+          gamepad2.dpad_down, // reverse intake
+          gamepad1.a  // toggle direction
         };
 
         return buttonList;

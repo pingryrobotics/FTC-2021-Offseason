@@ -29,8 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -44,9 +43,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -94,9 +99,21 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="AutoBlue", group ="Linear OpMode")
+@Autonomous(name="AutoBlue", group ="Autonomous")
 
 public class AutoBlue extends LinearOpMode {
+//    public String name() {
+//        return "AutoBlue";
+//    }
+//    public String group() {
+//        return "Autonomous";
+//    }
+//
+//    @Override
+//    public Class<? extends Annotation> annotationType() {
+//        return null;
+//    }
+
 
     // IMPORTANT: If you are using a USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -146,21 +163,44 @@ public class AutoBlue extends LinearOpMode {
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
-    private MecanumDrive mecanumDrive;
+//    private MecanumDrive mecanumDrive = new MecanumDrive(hardwareMap);
+//    private Outtake outtake = new Outtake(hardwareMap);
+//    private Intake intake = new Intake(hardwareMap);
+//    private WobbleMech wobbleMech = new WobbleMech(hardwareMap);
 
     // Variable of which square for autonomous (A,B,C), (1,2,3) respectivelly
     private int square = 0;
 
     @Override public void runOpMode() {
+        MecanumDrive mecanumDrive = new MecanumDrive(hardwareMap);
+        Outtake outtake = new Outtake(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
+        WobbleMech wobbleMech = new WobbleMech(hardwareMap);
+
+        outtake.outtake();
+        mecanumDrive.moveEncoderStraight(1, 0.5);
+//        sleep(2000);
+//        mecanumDrive.moveEncoderStrafeRight(12, 0.5);
+//        sleep(2000);
+
+//        for (int i = 0; i < 3; i++) {
+//            outtake.pushRing();
+//            sleep(1000);
+//            outtake.retract();
+//            sleep(1000);
+//        }
+
+
+    }
+
+    public void old() {
         /*
          * Retrieve the camera we are to use.
          */
-
         initVuforia();
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //Create new Mecanum Drive for encoder movement.
-        mecanumDrive = new MecanumDrive(hardwareMap);
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -241,6 +281,9 @@ public class AutoBlue extends LinearOpMode {
                 .translation(halfField, -quadField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
+
+
+
         //
         // Create a transformation matrix describing where the phone is on the robot.
         //
@@ -293,22 +336,22 @@ public class AutoBlue extends LinearOpMode {
 
         // First the amount of rings are found using the get rings function
         // The square variable is updated to the A,B, or C square
-        int rings = getRings();
-
-        if(rings == 4)
-        {
-          square = 3;
-        }
-
-        else if(rings == 1)
-        {
-          square = 2;
-        }
-
-        else
-        {
-          square = 1;
-        }
+//        int rings = getRings();
+//
+//        if(rings == 4)
+//        {
+//          square = 3;
+//        }
+//
+//        else if(rings == 1)
+//        {
+//          square = 2;
+//        }
+//
+//        else
+//        {
+//          square = 1;
+//        }
 
 
 
@@ -318,76 +361,77 @@ public class AutoBlue extends LinearOpMode {
         // the distance from the front of the robot
         // to the center of the grabber arm in inches
         // current value is an estimate
-//        goToWobble();
 
-
-        targetsUltimateGoal.activate();
-
-        //DESIRED X AND Y POSITIONS (TENTATIVE --> MUST BE CHANGED)
-        int x = 10;
-        int y = 10;
-
-
-        List<Float> translationRotation = new ArrayList<Float>();
-        //First change angle
-        boolean keepGoingAngle = true;
-        double difference = 0;
-        while(keepGoingAngle)
-        {
-          if(translationRotation.get(5) == 0)
-          {
-            keepGoingAngle = false;
-          }
-
-            // Now caluclate the distance you have to turn
-            difference = 0 - translationRotation.get(5);
-
-          // turn
-          mecanumDrive.encoderTurn(difference, 0.5);
-
-          // update position
-          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
-        }
-
-        boolean keepGoingVertical = true;
-        while(keepGoingVertical)
-        {
-          if(translationRotation.get(1) == y)
-          {
-            keepGoingVertical = false;
-          }
-
-          // Now caluclate the distance you have to turn
-          difference = x - translationRotation.get(1);
-
-          // turn
-          mecanumDrive.moveEncoderStraight(difference, 0.5);
-
-          // update position
-          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
-        }
-
-
-        boolean keepGoingHorizontal = true;
-        while(keepGoingHorizontal)
-        {
-          if(translationRotation.get(0) == x)
-          {
-            keepGoingHorizontal = false;
-          }
-
-          // Now caluclate the distance you have to turn
-          difference = y - translationRotation.get(0);
-
-          // turn
-          mecanumDrive.moveEncoderStrafeRight(difference, 0.5);
-
-          // update position
-          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
-        }
-
-        // Disable Tracking when we are done;
-        targetsUltimateGoal.deactivate();
+//        moveToWobbleSquare(square);
+//        openAndDropArm();
+//
+//        targetsUltimateGoal.activate();
+//
+//        //DESIRED X AND Y POSITIONS (TENTATIVE --> MUST BE CHANGED)
+//        int x = 10;
+//        int y = 10;
+//
+//
+//        List<Float> translationRotation = new ArrayList<Float>();
+//        //First change angle
+//        boolean keepGoingAngle = true;
+//        double difference = 0;
+//        while(keepGoingAngle)
+//        {
+//          if(translationRotation.get(5) == 0)
+//          {
+//            keepGoingAngle = false;
+//          }
+//
+//            // Now caluclate the distance you have to turn
+//            difference = 0 - translationRotation.get(5);
+//
+//          // turn
+//          mecanumDrive.encoderTurn(difference, 0.5);
+//
+//          // update position
+//          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
+//        }
+//
+//        boolean keepGoingVertical = true;
+//        while(keepGoingVertical)
+//        {
+//          if(translationRotation.get(1) == y)
+//          {
+//            keepGoingVertical = false;
+//          }
+//
+//          // Now caluclate the distance you have to turn
+//          difference = x - translationRotation.get(1);
+//
+//          // turn
+//          mecanumDrive.moveEncoderStraight(difference, 0.5);
+//
+//          // update position
+//          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
+//        }
+//
+//
+//        boolean keepGoingHorizontal = true;
+//        while(keepGoingHorizontal)
+//        {
+//          if(translationRotation.get(0) == x)
+//          {
+//            keepGoingHorizontal = false;
+//          }
+//
+//          // Now caluclate the distance you have to turn
+//          difference = y - translationRotation.get(0);
+//
+//          // turn
+//          mecanumDrive.moveEncoderStrafeRight(difference, 0.5);
+//
+//          // update position
+//          translationRotation = getRobotLocation(targetsUltimateGoal, allTrackables);
+//        }
+//
+//        // Disable Tracking when we are done;
+//        targetsUltimateGoal.deactivate();
     }
 
     public List<Float> getRobotLocation(VuforiaTrackables targetsUltimateGoal, List<VuforiaTrackable> allTrackables){
@@ -469,15 +513,18 @@ public class AutoBlue extends LinearOpMode {
     }
 
     // moves to the specified square
-    private void moveToWobbleSquare(int square) {
-      float lengthToGrabber = 6;
-      // forward distance to center of square
-      double[] distanceToSquare = {82.625, 106, 125.875};
-      double power = 0.5;
-      float strafeDistance = -6;
-      mecanumDrive.moveEncoderStraight(distanceToSquare[square-1], power);
-      mecanumDrive.moveEncoderStrafeRight(strafeDistance, 0.5);
-
+//    private void moveToWobbleSquare(int square) {
+//        float lengthToGrabber = 6;
+//        // forward distance to center of square
+//        double[] distanceToSquare = {82.625, 106, 125.875};
+//        double power = 0.5;
+//        float strafeDistance = -6;
+//        mecanumDrive.moveEncoderStraight(distanceToSquare[square - 1], power);
+//        sleep(100);
+//        mecanumDrive.moveEncoderStrafeRight(strafeDistance, 0.5);
+//        sleep(100);
+//
+//    }
 
       //
       // if(square == 1)
@@ -526,7 +573,6 @@ public class AutoBlue extends LinearOpMode {
       //   // The wobble now has to be left there, so it should go
       //   mecanumDrive.moveEncorderStraight(-5, 0.5);
       // }
-    }
 
     private void initTfod() {
        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
@@ -554,5 +600,25 @@ public class AutoBlue extends LinearOpMode {
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
+
+//    private void shootRings() {
+//        outtake.pushRing();
+//        sleep(500);
+//        outtake.retract();
+//        sleep(500);
+//    }
+//
+//    private void openAndDropArm() {
+//
+//        wobbleMech.down();
+//        sleep(500);
+//        wobbleMech.letGo();
+//    }
+//
+//    private void closeAndRaiseArm() {
+//        wobbleMech.grab();
+//        sleep(300);
+//        wobbleMech.up();
+//    }
 
 }

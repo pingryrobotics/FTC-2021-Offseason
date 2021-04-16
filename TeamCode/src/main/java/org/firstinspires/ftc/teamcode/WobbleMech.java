@@ -28,14 +28,14 @@ public class WobbleMech {
         //wobbleMotor.setTargetPosition(1);
         //974
         //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wobbleMotor.setPower(-0.5);
+        wobbleMotor.setPower(-0.75);
     }
 
     public void down() {
         //wobbleMotor.setTargetPosition(-1);
         //974
         //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wobbleMotor.setPower(0.5);
+        wobbleMotor.setPower(0.75);
 //      System.out.println("running");
     }
 

@@ -13,6 +13,7 @@ public class MecanumDrive {
     public DcMotor rightFront = null;
     public DcMotor rightRear = null;
     public double strafeAdjustment = 0.2;
+    public double leftMotorIsBroken = 8;
 
     public MecanumDrive(HardwareMap hardwareMap){
         leftFront = hardwareMap.get(DcMotor.class, "left_front");
@@ -43,7 +44,7 @@ public class MecanumDrive {
         leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() - (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
         rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
 
-        leftFront.setPower(power);
+        leftFront.setPower(power * leftMotorIsBroken);
         rightFront.setPower(power);
         leftRear.setPower(power);
         rightRear.setPower(power);
@@ -55,11 +56,17 @@ public class MecanumDrive {
         rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
         leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
         rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
-
+        //(inches * 3896 * 2.54 / 10 / Math.PI))
+        //3896 ticks per rotation
+        //10 cm diameter
+        //10*pi/2.54 inches . rev
+        //
+        //AndyMark Neverrest 28 ticks per revolution * 25 reduction = 700
+        //4in*pi /rev
         if(inches < 0){
             power *= -1;
         }
-        leftFront.setPower(power);
+        leftFront.setPower(power * leftMotorIsBroken);
         rightFront.setPower(power);
         leftRear.setPower(power);
         rightRear.setPower(power);
@@ -129,15 +136,15 @@ public class MecanumDrive {
     }
 
     public void polarMove(double angle, double turn, double power){
-        final double v1 = power * Math.cos(angle) + turn;
+        final double v1 = (power * leftMotorIsBroken) * Math.cos(angle) + turn;
         final double v2 = power * Math.sin(angle) - turn;
         final double v3 = power * Math.sin(angle) + turn;
         final double v4 = power * Math.cos(angle) - turn;
 
-        leftFront.setPower(-1 * v1);
-        rightFront.setPower(-1 * v2);
-        leftRear.setPower(-1 * v3);
-        rightRear.setPower(-1 * v4);
+        leftFront.setPower(-0.8 * v1);
+        rightFront.setPower(-0.8 * v2);
+        leftRear.setPower(-0.8 * v3);
+        rightRear.setPower(-0.8 * v4);
     }
     public void brake(){
         leftFront.setPower(0);
