@@ -13,7 +13,8 @@ public class MecanumDrive {
     public DcMotor rightFront = null;
     public DcMotor rightRear = null;
     public double strafeAdjustment = 0.2;
-    public double leftMotorIsBroken = 8;
+
+    //
     // PPR = 28 \\ pulses per revolution for the unreducted motor
     //gearboxReduction = 19.2 \\reduction of the gearbox
     //wheelDiameter = 10/2.54; \\in inches
@@ -24,6 +25,8 @@ public class MecanumDrive {
     private static final double gearboxReduction = 19.2 // reduction of gearbox, check specs
     private static final double pulsesPerRevolution = 28 // pulses per revolution for the unreducted motor
     private static final double ticksPerInch = ((pulsesPerRevolution * gearboxReduction) / wheelDiameterInches) / Math.PI;
+
+    public double leftMotorIsBroken = 8;
 
     public MecanumDrive(HardwareMap hardwareMap){
         leftFront = hardwareMap.get(DcMotor.class, "left_front");
