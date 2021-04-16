@@ -88,7 +88,7 @@ public class DriveMain extends OpMode
 {
     // Declare OpMode members.
 
-    private ElapsedTime runtime;
+    //private ElapsedTime runtime;
     private MecanumDrive mecanumDrive;
     private int offsetAngle;
     private int direc;
@@ -110,6 +110,7 @@ public class DriveMain extends OpMode
         offsetAngle = 0;
         direc = 1;
         previousButtonStates = updateButtonList();
+        wobbleMech = new WobbleMech(hardwareMap);
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -134,7 +135,7 @@ public class DriveMain extends OpMode
      */
     @Override
     public void start() {
-        runtime.reset();
+        //runtime.reset();
     }
 
 
@@ -159,7 +160,7 @@ public class DriveMain extends OpMode
         robotAngle += offsetAngle / 180.0 * Math.PI;
         double rightX = -gamepad1.right_stick_x;
         mecanumDrive.polarMove(robotAngle, rightX, direc * speed * magnitude);
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Position", wobbleMech.getPosition());
 //        System.out.println(wobbleMech.getTargetPosition());
 //        System.out.println(wobbleMech.getMode());

@@ -52,10 +52,10 @@ public class MecanumDrive {
 
     public void moveEncoderStraight(double inches, double power){
         power = Math.abs(power);
-        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
-        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
-        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
-        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * 140 / Math.PI))); // should be divided by 4 times pi times 20 times 7
+        leftFront.setTargetPosition((int) (leftFront.getCurrentPosition() + (inches * 136.6 / Math.PI))); // should be divided by 4 times pi times 20 times 7
+        rightFront.setTargetPosition((int) (rightFront.getCurrentPosition() + (inches * 136.6 / Math.PI))); // should be divided by 4 times pi times 20 times 7
+        leftRear.setTargetPosition((int) (leftRear.getCurrentPosition() + (inches * 136.6 / Math.PI))); // should be divided by 4 times pi times 20 times 7
+        rightRear.setTargetPosition((int) (rightRear.getCurrentPosition() + (inches * 136.6 / Math.PI))); // should be divided by 4 times pi times 20 times 7
         //(inches * 3896 * 2.54 / 10 / Math.PI))
         //3896 ticks per rotation
         //10 cm diameter
