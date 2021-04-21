@@ -60,10 +60,9 @@ public class VuforiaNavigation extends LinearOpMode {
 		// adds all of the previously declared pictures, we can also do it manually for each picture
 		allTrackables.addAll(UltimateGoal);
 
-
 		// mm bc they're the recommended units and it's easier to use mm for calculations
-        float mmPerInch = 25.4f;
-        float mmBotWidth = 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
-        float mmFTCFieldWidth = (12*12 - 2) * mmPerInch; // the FTC field is ~11'10" center-to-center of the glass panels
+		float mmPerInch = 25.4f;
+		float mmBotWidth = 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
+		float mmFTCFieldWidth = (12*12 - 2) * mmPerInch; // the FTC field is ~11'10" center-to-center of the glass panels
 	}
 }
