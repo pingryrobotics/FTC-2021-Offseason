@@ -60,15 +60,10 @@ public class VuforiaNavigation extends LinearOpMode {
 		// adds all of the previously declared pictures, we can also do it manually for each picture
 		allTrackables.addAll(UltimateGoal);
 
-		/**
-         * We use units of mm here because that's the recommended units of measurement for the
-         * size values specified in the XML for the ImageTarget trackables in data sets. E.g.:
-         *      <ImageTarget name="stones" size="247 173"/>
-         * You don't *have to* use mm here, but the units here and the units used in the XML
-         * target configuration files *must* correspond for the math to work out correctly.
-         */
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 17.7 * mmPerInch;            // ... or whatever is right for your robot
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
+
+		// mm bc they're the recommended units and it's easier to use mm for calculations
+        float mmPerInch = 25.4f;
+        float mmBotWidth = 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
+        float mmFTCFieldWidth = (12*12 - 2) * mmPerInch; // the FTC field is ~11'10" center-to-center of the glass panels
 	}
 }
