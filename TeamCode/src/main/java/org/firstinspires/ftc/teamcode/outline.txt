@@ -1,4 +1,3 @@
-
 Outline for new ftc code structure
 
 Things we need to do:
