@@ -64,5 +64,12 @@ public class VuforiaNavigation extends LinearOpMode {
 		float mmPerInch = 25.4f;
 		float mmBotWidth = 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
 		float mmFTCFieldWidth = (12*12 - 2) * mmPerInch; // the FTC field is ~11'10" center-to-center of the glass panels
+
+		/**
+		 * now we have to position the images
+		 * they're initially at the center of the field facing up
+		 * we need to move them according to their actual positions
+		 * need to rotate x/y/z and actually postiion the location
+		 */
 	}
 }
