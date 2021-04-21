@@ -23,3 +23,21 @@ Useful links:
         - https://www.ncfllandftc.com/uploads/7/5/2/2/75228755/introduction_to_ftc_control_theory.pdf
     6. PID - github sample for motor
         - https://github.com/BenCaunt8300/ControlTheoryFTCTutorial/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/controller/pid.java
+    7. 2021 ultimate goal resource library
+        - https://www.firstinspires.org/resource-library/ftc/game-and-season-info
+    8. github samples
+        - https://github.com/FIRST-Tech-Challenge/FtcRobotController
+
+Mechanisms:
+    - Intake
+    - Outtake
+    - WobbleMech
+    - MecanumDrive
+
+Camera recognition:
+    - Tensorflow
+    - Vuforia
+
+Internals:
+    - PID motor
+    - waypoints/positioning
