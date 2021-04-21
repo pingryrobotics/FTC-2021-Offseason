@@ -1,0 +1,25 @@
+
+Outline for new ftc code structure
+
+Things we need to do:
+    1. better PID
+    2. better goToPosition
+    3. better mecanumDrive
+    4. better controller system with states like onbuttondwon, onhold, onbuttonup
+    5. figure out how servo control actually works
+    6. make vuforia work correctly
+    7. GOOD FILE STRUCTURE FOR SUSTAINABILITY
+
+Useful links:
+    1. Hardware - all hardware documentation:
+        - https://ftctechnh.github.io/ftc_app/doc/javadoc/index.html?com/qualcomm/robotcore/hardware/
+    2. Hardware - Gamepad docs
+        - https://ftctechnh.github.io/ftc_app/doc/javadoc/com/qualcomm/robotcore/hardware/Gamepad.html
+    3. vuforia - tutorial (unofficial)
+        - https://codedog.net/2016/09/29/ftc-and-vuforia/
+    4. vuforia - adding image targets (official)
+        - https://library.vuforia.com/features/images/image-targets.html
+    5. PID - overview slideshow
+        - https://www.ncfllandftc.com/uploads/7/5/2/2/75228755/introduction_to_ftc_control_theory.pdf
+    6. PID - github sample for motor
+        - https://github.com/BenCaunt8300/ControlTheoryFTCTutorial/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/controller/pid.java
