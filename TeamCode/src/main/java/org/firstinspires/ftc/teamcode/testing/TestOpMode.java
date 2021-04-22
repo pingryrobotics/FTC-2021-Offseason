@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.testing;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+
 @TeleOp(name="Testing: Test opmode", group="Testing")
 public class TestOpMode extends OpMode {
     // field declarations
 
-    private
+    private ObjectDetector tfod;
+    private int number = 1;
+
 
 
     @Override

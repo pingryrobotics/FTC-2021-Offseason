@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * android studio, or just go to declaration). You can get the label,
  * confidence, estimated angle, coordinate in the image, and other things
  */
-public class TfObjectDetector {
+public class ObjectDetector {
     // tensorflow model settings
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -31,14 +31,13 @@ public class TfObjectDetector {
     private TFObjectDetector tfod;
     private HardwareMap hardwareMap;
     private VuforiaLocalizer vuforia;
-
     /**
      * Initialize the tensorflow object detection object
      * @param hardwareMap The hardware map for the robot
      * @param vuforia The vuforia object that the tensorflow object uses for recognitions. This the
      *                actual vuforia object, not an instance of our class
      */
-    public Tensorflow(HardwareMap hardwareMap, VuforiaLocalizer vuforia) {
+    public ObjectDetector(HardwareMap hardwareMap, VuforiaLocalizer vuforia) {
         this.vuforia = vuforia;
         this.hardwareMap = hardwareMap;
     }
