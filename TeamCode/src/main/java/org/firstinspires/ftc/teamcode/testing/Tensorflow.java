@@ -14,6 +14,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 // sourced from https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/ConceptTensorFlowObjectDetection.java
+
+/**
+ * Wrapper class for tensorflow object detection
+ * Note: to get more information on Recognition objects, look at the class file (command b on
+ * android studio, or just go to declaration). You can get the label,
+ * confidence, estimated angle, coordinate in the image, and other things
+ */
 public class Tensorflow {
     // tensorflow model settings
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
