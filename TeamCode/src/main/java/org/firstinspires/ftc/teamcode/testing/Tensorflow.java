@@ -20,21 +20,37 @@ public class Tensorflow {
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
 
-    // make tensorflow object detector object var
+    // tfod is the main tensorflow object detection object
     private TFObjectDetector tfod;
     private HardwareMap hardwareMap;
     private VuforiaLocalizer vuforia;
 
+    /**
+     * Initialize the tensorflow object detection object
+     * @param hardwareMap The hardware map for the robot
+     * @param vuforia The vuforia object that the tensorflow object uses for recognitions. This the
+     *                actual vuforia object, not an instance of our class
+     */
     public Tensorflow(HardwareMap hardwareMap, VuforiaLocalizer vuforia) {
         this.vuforia = vuforia;
         this.hardwareMap = hardwareMap;
     }
 
+    /**
+     * Gets an updated list of tf recognitions
+     * @return the list of recognition objects
+     */
     public List<Recognition> getRecognitionList() {
         List<Recognition> recognitionList = tfod.getUpdatedRecognitions();
         return recognitionList;
     }
 
+    /**
+     * Gets the number of recognitions. You could just call getRecognitionList then get the size,
+     * but this is easier for some things. Depending on what tfod actually recognizes, this might get
+     * changed to only recognize certain objects.
+     * @return The total number of recognitions
+     */
     public int getRecognitionCount() {
         List<Recognition> recognitionList = tfod.getUpdatedRecognitions();
         return recognitionList.size();
