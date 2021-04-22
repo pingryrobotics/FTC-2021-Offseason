@@ -6,14 +6,15 @@ import java.util.Hashtable;
 
 public class GamepadController implements Gamepad.GamepadCallback {
     private Gamepad gamepad;
-    public Hashtable<Button, ButtonState> buttonStates;
+    public Hashtable<Button, ButtonState> buttonStateDict;
+    public Hashtable<Button, Boolean> gamepadStateDict;
 
     public GamepadController(Gamepad gamepad) {
         this.gamepad = gamepad;
-        buttonStates = new Hashtable<Button, ButtonState>();
+        buttonStateDict = new Hashtable<Button, ButtonState>();
         // set all to inactive (maybe loop or something)
-        buttonStates.put(Button.A, ButtonState.KEY_INACTIVE);
-        buttonStates.put(Button.B, ButtonState.KEY_INACTIVE);
+        buttonStateDict.put(Button.A, ButtonState.KEY_INACTIVE);
+        buttonStateDict.put(Button.B, ButtonState.KEY_INACTIVE);
         updateButtonStates();
     }
 
@@ -24,7 +25,11 @@ public class GamepadController implements Gamepad.GamepadCallback {
     }
 
     public void updateButtonStates() {
+        gamepadStateDict.put(Button.A, gamepad.a);
+    }
 
+    public ButtonState getButtonState(Button button) {
+        return buttonStateDict.get(button);
     }
 
     // maybe have different enum for variable buttons like triggers and joysticks

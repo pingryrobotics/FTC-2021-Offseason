@@ -5,6 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Testing: Test opmode", group="Testing")
 public class TestOpMode extends OpMode {
+    // field declarations
+
+    private
+
+
     @Override
     public void init() {
 
