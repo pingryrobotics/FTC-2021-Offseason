@@ -129,11 +129,7 @@ public class VuforiaNavigation extends LinearOpMode {
 
 
 		// rotate camera so that it faces forward
-		if (CAMERA_CHOICE == BACK) {
-			phoneYRotate = -90;
-		} else {
-			phoneYRotate = 90;
-		}
+		phoneYRotate = -90;
 
 		// transformation matrix that describes where camera is on robot
 		// initially the webcam is assumed to face up and the top points to the left of the robot
