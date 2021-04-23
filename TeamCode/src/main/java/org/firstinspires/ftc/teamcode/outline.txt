@@ -2,12 +2,13 @@ Outline for new ftc code structure
 
 Things we need to do:
     1. better PID
-    2. better goToPosition
+    2. fix runToPosition
     3. better mecanumDrive
     4. better controller system with states like onbuttondwon, onhold, onbuttonup
     5. figure out how servo control actually works
     6. make vuforia work correctly
     7. GOOD FILE STRUCTURE FOR SUSTAINABILITY
+		- comments and commit messages as well 
 
 Useful links:
     1. Hardware - all hardware documentation:
