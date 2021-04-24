@@ -139,7 +139,7 @@ public class VuforiaNavigation extends LinearOpMode {
 		// measure these out and change them to be applicable to the current robot
 		final float CAMERA_FORWARD_DISPLACEMENT  = 4.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
 		final float CAMERA_VERTICAL_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
-		final float CAMERA_LEFT_DISPLACEMENT     = -3.0f * mmPerInch;     // eg: Camera is ON the robot's center line
+		final float CAMERA_LEFT_DISPLACEMENT = -3.0f * mmPerInch;     // eg: Camera is ON the robot's center line
 
 		OpenGLMatrix robotFromCamera = OpenGLMatrix
 					.translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -160,45 +160,45 @@ public class VuforiaNavigation extends LinearOpMode {
 
 		// DON'T PUT ANY DRIVING COMMANDS IN THIS LOOP
 
-		targetsUltimateGoal.activate();
-		while (!isStopRequested()) {
+		// targetsUltimateGoal.activate();
+		// while (!isStopRequested()) {
 
-			// check all the trackable targets to see which one (if any) is visible.
-			targetVisible = false;
-			for (VuforiaTrackable trackable : allTrackables) {
-				if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-					telemetry.addData("Visible Target", trackable.getName());
-					targetVisible = true;
+		// 	// check all the trackable targets to see which one (if any) is visible.
+		// 	targetVisible = false;
+		// 	for (VuforiaTrackable trackable : allTrackables) {
+		// 		if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+		// 			telemetry.addData("Visible Target", trackable.getName());
+		// 			targetVisible = true;
 
-					// getUpdatedRobotLocation() will return null if no new information is available since
-					// the last time that call was made, or if the trackable is not currently visible.
-					OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-					if (robotLocationTransform != null) {
-						lastLocation = robotLocationTransform;
-					}
-					break;
-				}
-			}
+		// 			// getUpdatedRobotLocation() will return null if no new information is available since
+		// 			// the last time that call was made, or if the trackable is not currently visible.
+		// 			OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+		// 			if (robotLocationTransform != null) {
+		// 				lastLocation = robotLocationTransform;
+		// 			}
+		// 			break;
+		// 		}
+		// 	}
 
-			// Provide feedback as to where the robot is located (if we know).
-			if (targetVisible) {
-				// express position (translation) of robot in inches.
-				VectorF translation = lastLocation.getTranslation();
-				telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-						translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+		// 	// Provide feedback as to where the robot is located (if we know).
+		// 	if (targetVisible) {
+		// 		// express position (translation) of robot in inches.
+		// 		VectorF translation = lastLocation.getTranslation();
+		// 		telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+		// 				translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
-				// express the rotation of the robot in degrees.
-				Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-				telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-			}
-			else {
-				telemetry.addData("Visible Target", "none");
-			}
-			telemetry.update();
-		}
+		// 		// express the rotation of the robot in degrees.
+		// 		Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+		// 		telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+		// 	}
+		// 	else {
+		// 		telemetry.addData("Visible Target", "none");
+		// 	}
+		// 	telemetry.update();
+		// }
 
-		// Disable Tracking when we are done;
-		targetsUltimateGoal.deactivate();
+		// // Disable Tracking when we are done;
+		// targetsUltimateGoal.deactivate();
 
 
 		// normal opmode
@@ -232,10 +232,10 @@ public class VuforiaNavigation extends LinearOpMode {
 		boolean buttonPressed = false;
 		while (opModeIsActive()) {
 
-			if (gamepad1.a && !buttonPressed) {
+			if (gamepad1.b && !buttonPressed) {
 				captureFrameToFile();
 			}
-			buttonPressed = gamepad1.a;
+			buttonPressed = gamepad1.b;
 
 			for (VuforiaTrackable trackable : allTrackables) {
 				/**
