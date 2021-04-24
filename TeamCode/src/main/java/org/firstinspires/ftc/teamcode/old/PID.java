@@ -4,6 +4,9 @@ public class PID {
     private double P;
     private double I;
     private double D;
+    private double uP;
+    private double uI;
+    private double yD;
     private double pointer = 0;
     private double max_input = 0;
     private double min_input = 0;
@@ -14,6 +17,7 @@ public class PID {
     private double totalError = 0;
     private double previousError = 0;
     private double threshold = 0;
+    private boolean first;
     private int sign = 1;
 
 
@@ -21,6 +25,7 @@ public class PID {
         P = uP;
         I = uI;
         D = uD;
+        first = true;
     }
 
     public double calculate(double current_value){
