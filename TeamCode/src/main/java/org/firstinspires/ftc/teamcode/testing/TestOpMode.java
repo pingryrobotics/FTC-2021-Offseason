@@ -9,7 +9,6 @@ public class TestOpMode extends OpMode {
     // field declarations
 
     private ObjectDetector tfod;
-    private int number = 1;
 
 
 
