@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.Hashtable;
 
+/**
+ * Class that acts as a wrapper for the gamepad to make getting the keydown, keyup, etc state easier
+ * Also automatically updates when the gamepad updates
+ */
 public class GamepadController implements Gamepad.GamepadCallback {
     private Gamepad gamepad;
     // dict of the controller states, as in keydown, hold, up, etc
@@ -110,6 +114,7 @@ public class GamepadController implements Gamepad.GamepadCallback {
      * Probably has to be manual because primitives dont point to memory (pretty sure)
      *
      * NOTE: to treat a float button as an on/off button, add (value > 0) to the toggle value dict
+     * left/right trigger are currently floats treated as booleans
      */
     public void updateButtonValues() {
         // update toggle values
@@ -123,10 +128,15 @@ public class GamepadController implements Gamepad.GamepadCallback {
         gamepadToggleValues.put(ToggleButton.DPAD_RIGHT, gamepad.dpad_right);
         gamepadToggleValues.put(ToggleButton.LEFT_BUMPER, gamepad.left_bumper);
         gamepadToggleValues.put(ToggleButton.RIGHT_BUMPER, gamepad.right_bumper);
+        gamepadToggleValues.put(ToggleButton.LEFT_STICK_BUTTON, gamepad.left_stick_button);
+        gamepadToggleValues.put(ToggleButton.RIGHT_STICK_BUTTON, gamepad.right_stick_button);
+        gamepadToggleValues.put(ToggleButton.START_BUTTON, gamepad.start);
+        gamepadToggleValues.put(ToggleButton.BACK_BUTTON, gamepad.back);
+
+        gamepadToggleValues.put(ToggleButton.LEFT_TRIGGER, (gamepad.left_trigger > 0)); // ACTUALLY A FLOAT
+        gamepadToggleValues.put(ToggleButton.RIGHT_TRIGGER, (gamepad.right_trigger > 0)); // ^
 
         // update float values
-        gamepadFloatValues.put(FloatButton.LEFT_TRIGGER, gamepad.left_trigger);
-        gamepadFloatValues.put(FloatButton.RIGHT_TRIGGER, gamepad.right_trigger);
         gamepadFloatValues.put(FloatButton.LEFT_STICK_X, gamepad.left_stick_x);
         gamepadFloatValues.put(FloatButton.LEFT_STICK_Y, gamepad.left_stick_y);
         gamepadFloatValues.put(FloatButton.RIGHT_STICK_X, gamepad.right_stick_x);
@@ -151,8 +161,6 @@ public class GamepadController implements Gamepad.GamepadCallback {
         return gamepadFloatValues.get(button);
     }
 
-
-
     // enum of button states that are either on or off
     public enum ToggleButton {
         A,
@@ -164,14 +172,18 @@ public class GamepadController implements Gamepad.GamepadCallback {
         DPAD_LEFT,
         DPAD_RIGHT,
         LEFT_BUMPER,
-        RIGHT_BUMPER; // determine whether or not to use triggers as buttons, maybe make a state for that
+        RIGHT_BUMPER,
+        LEFT_STICK_BUTTON,
+        RIGHT_STICK_BUTTON,
+        START_BUTTON,
+        BACK_BUTTON,
+        LEFT_TRIGGER, // THIS IS ACTUALLY A FLOAT
+        RIGHT_TRIGGER, // ^
     }
 
     // this is a bad name
     // enum of buttons that have floats as values rather than booleans
     public enum FloatButton {
-        LEFT_TRIGGER,
-        RIGHT_TRIGGER,
         LEFT_STICK_X,
         LEFT_STICK_Y,
         RIGHT_STICK_X,
