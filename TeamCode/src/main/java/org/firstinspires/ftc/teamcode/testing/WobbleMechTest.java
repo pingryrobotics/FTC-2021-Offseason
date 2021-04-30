@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class WobbleMech {
     private DcMotor wobbleMotor;
     private Servo servo;
-    private int position;
+    private double upPosition;
+    private boolean up = true;
+    private double downPosition;
 //    private int targetPosition;
 //    private boolean isMoving;
     //private Servo feeder;
-    public WobbleMech(HardwareMap hardwareMap) {
+    public WobbleMechTest(HardwareMap hardwareMap) {
         wobbleMotor = hardwareMap.get(DcMotor.class, "wobbleMotor");
         wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -21,22 +23,18 @@ public class WobbleMech {
         servo = hardwareMap.get(Servo.class, "wobbleServo");
         servo.setDirection(Servo.Direction.FORWARD);
         servo.scaleRange(0, .4);
-        position = getPosition();
+        upPosition = getPosition();
+        downPosition = upPosition - 50;
+    }
+    
+
+    public void setUp(boolean up){
+        this.up = up;
     }
 
-    public void up(){
-        //wobbleMotor.setTargetPosition(1);
-        //974
-        //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wobbleMotor.setPower(-0.75);
-    }
-
-    public void down() {
-        //wobbleMotor.setTargetPosition(-1);
-        //974
-        //wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wobbleMotor.setPower(0.75);
-//      System.out.println("running");
+    public setPower(double power)
+    {
+        wobbleMotor.setPower(power);
     }
 
     public void grab(){
@@ -50,6 +48,7 @@ public class WobbleMech {
     }
 
 
+    
 //    public void checkPosition() {
 //        if (isMoving && getPosition() >= targetPosition) {
 //            isMoving = false;
@@ -63,7 +62,15 @@ public class WobbleMech {
     }
 
     public int getTargetPosition() {
-        return wobbleMotor.getTargetPosition();
+        if(up)
+        {
+            return downPosition;
+        }
+
+        else 
+        {
+            return upPosition;
+        }
     }
 
     public void stop() {
