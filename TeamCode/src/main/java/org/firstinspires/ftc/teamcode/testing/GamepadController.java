@@ -34,15 +34,15 @@ public class GamepadController implements Gamepad.GamepadCallback {
      * Initializes the controller states with inactive or their float value for float buttons
      */
     public void initializeGamepadStates() {
-        // set toggle button states
+        // set button values
         updateButtonValues();
 
-        // set float button states
-//        gamepadFloatStates.put(FloatButton.RIGHT_TRIGGER, gamepad.right_trigger);
-
+        // set initial state for all buttons to inactive
         for (ToggleButton toggleButton : ToggleButton.values()) {
             controllerToggleStates.put(toggleButton, ButtonState.KEY_INACTIVE);
         }
+
+        updateButtonStates();
     }
 
     /**
@@ -181,7 +181,6 @@ public class GamepadController implements Gamepad.GamepadCallback {
         RIGHT_TRIGGER, // ^
     }
 
-    // this is a bad name
     // enum of buttons that have floats as values rather than booleans
     public enum FloatButton {
         LEFT_STICK_X,
