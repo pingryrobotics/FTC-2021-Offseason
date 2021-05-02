@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testing;
 
 /**
  * 
  */
-public class PIDmotor
+public class MotorPID
 {
     // Fields 
     
@@ -29,17 +29,18 @@ public class PIDmotor
     // This is the desire value. This will be based on the motor's function.
     // For example, for a more precise motor action like the function of a servo this value could be a position.
     // For the drive chassis it might be better to make this value the spinning rate of the motor
-    private double deriredValue = 0;
+    private double desiredValue = 0;
     
     //This it the max I output.
     //A max I ouput is defined because too much power given by the I value will cause some windup and overshoots.
-    private double maxIOutput = 0;
+    private double minIntegralOutput = 0;
+    private double maxIntegralOutput = 0;
 
     // This is the max output that pid value can be, in this case it is the highest power of the motor.
-    private double max_output = 0;
+    private double maxTotalOutput = 0;
 
     // The lower value which the pid value can be, int this case it is the lowest power of the motor.
-    private double min_output = 0;
+    private double minTotalOutput = 0;
 
     private double input = 0;
     
@@ -47,7 +48,7 @@ public class PIDmotor
     private double error = 0;
 
     // This is the error sum, the sum of all previous errors.
-    private double errorSum = 0;
+    private double totalErrorSum = 0;
 
     //private double previousError = 0;
     
@@ -55,7 +56,7 @@ public class PIDmotor
     private double threshold = 0;
 
     // This is true if this is there has been no error before.
-    private boolean first;
+    private boolean isFirstCalculation;
 
     // A sign value which can reverse the pid value  
     private int sign = 1;
@@ -68,12 +69,12 @@ public class PIDmotor
      * @param kI
      * @param kD
      */
-    public PIDmotor(double kP, double kI, double kD)
+    public MotorPID(double kP, double kI, double kD)
     {
         P = kP;
         I = kI;
         D = kD;
-        first = true;
+        isFirstCalculation = true;
     }
 
     public void setTarget(double target)
@@ -83,14 +84,14 @@ public class PIDmotor
 
     public void setMaxOutputs(int min_output, int max_output)
     {
-        this.min_output = min_output;
-        this.max_output = max_output;
+        this.minTotalOutput = min_output;
+        this.maxTotalOutput = max_output;
     }
 
     public void setMaxMinIValues(int minIOutput, int maxIOutput)
     {
-        this.minIOutput = minIOutput;
-        this.maxIOutput = maxIOutput;
+        this.minIntegralOutput = minIOutput;
+        this.maxIntegralOutput = maxIOutput;
     }
 
     public void rezeroErrors(){
@@ -109,7 +110,7 @@ public class PIDmotor
         
         uP = P * error;
         
-        if(first)
+        if(isFirstCalculation)
         {
             previousError = error;
         }
@@ -117,12 +118,12 @@ public class PIDmotor
         uD = P * (error - previousError);
         previousError = error;
         
-        errorSum += error;
+        totalErrorSum += error;
 
-        uI = I * errorSum;
-        if(uI > maxIOutput)
+        uI = I * totalErrorSum;
+        if(uI > maxIntegralOutput)
         {
-            uI = maxIOutput;
+            uI = maxIntegralOutput;
         }
 
         double pidValue = uP + uI + uD;

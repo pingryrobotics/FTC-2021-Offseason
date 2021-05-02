@@ -1,30 +1,39 @@
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.testing;
 
+import android.graphics.Bitmap;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.RobotLog;
+import com.qualcomm.robotcore.util.ThreadPool;
+import com.vuforia.Frame;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+import java.util.Locale;
 
 
-@TeleOp(name="Concept: Vuforia Navigation", group ="Concept")
+@TeleOp(name="Concept: Vuforia Navigation", group ="Testing")
 @Disabled
 public class VuforiaNavigation extends LinearOpMode {
 
@@ -80,11 +89,11 @@ public class VuforiaNavigation extends LinearOpMode {
 		VuforiaTrackable frontWall = UltimateGoal.get(4);
 
 		// set names
-		blueTowerGoal.setTarget("BlueTowerGoal");
-		redTowerGoal.setTarget("RedTowerGoal");
-		redWallTarget.setTarget("RedWallTarget");
-		blueWallTarget.setTarget("BlueWallTarget");
-		frontWall.setTarget("FrontWall");	
+		blueTowerGoal.setName("BlueTowerGoal");
+		redTowerGoal.setName("RedTowerGoal");
+		redWallTarget.setName("RedWallTarget");
+		blueWallTarget.setName("BlueWallTarget");
+		frontWall.setName("FrontWall");
 
 		List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
@@ -93,7 +102,7 @@ public class VuforiaNavigation extends LinearOpMode {
 
 		// mm bc they're the recommended units and it's easier to use mm for calculations
 		float mmPerInch = 25.4f;
-		float mmBotWidth = 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
+		float mmBotWidth = (float) 17.7 * mmPerInch; // change the 17.7 to whatever the robot width is
 		float mmTargetHeight = (6) * mmPerInch; // the height of the center of the target image above the floor
 
 		// Constants for perimeter targets
@@ -272,26 +281,26 @@ public class VuforiaNavigation extends LinearOpMode {
 
 	// method to convert what the webcam is seeing into a .png, 
 	void captureFrameToFile() {
-	vuforia.getFrameOnce(Continuation.create(ThreadPool.getDefault(), new Consumer<Frame>()
-		{
-		@Override public void accept(Frame frame)
+		vuforia.getFrameOnce(Continuation.create(ThreadPool.getDefault(), new Consumer<Frame>()
 			{
-			Bitmap bitmap = vuforia.convertFrameToBitmap(frame);
-			if (bitmap != null) {
-				File file = new File(captureDirectory, String.format(Locale.getDefault(), "VuforiaFrame-%d.png", captureCounter++));
-				try {
-					FileOutputStream outputStream = new FileOutputStream(file);
+			@Override public void accept(Frame frame)
+				{
+				Bitmap bitmap = vuforia.convertFrameToBitmap(frame);
+				if (bitmap != null) {
+					File file = new File(captureDirectory, String.format(Locale.getDefault(), "VuforiaFrame-%d.png", captureCounter++));
 					try {
-						bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-					} finally {
-						outputStream.close();
-						telemetry.log().add("captured %s", file.getName());
+						FileOutputStream outputStream = new FileOutputStream(file);
+						try {
+							bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+						} finally {
+							outputStream.close();
+							telemetry.log().add("captured %s", file.getName());
+						}
+					} catch (IOException e) {
+						RobotLog.ee(TAG, e, "exception in captureFrameToFile()");
 					}
-				} catch (IOException e) {
-					RobotLog.ee(TAG, e, "exception in captureFrameToFile()");
 				}
 			}
-		}
-	}));
+		}));
 	}
 }
