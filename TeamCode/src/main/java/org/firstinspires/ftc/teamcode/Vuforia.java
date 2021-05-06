@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -13,11 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 /**
@@ -208,6 +205,10 @@ public class Vuforia {
             }
         }
         return lastLocation;
+    }
+
+    public VuforiaLocalizer getVuforiaLocalizer() {
+        return vuforiaLocalizer;
     }
 
 
