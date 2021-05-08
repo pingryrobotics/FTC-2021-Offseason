@@ -54,7 +54,7 @@ public class Vuforia {
 
 	// Constants for perimeter targets
 	private float halfField = 72 * mmPerInch;
-	private float quadField = 36 * mmPerInch
+	private float quadField = 36 * mmPerInch;
 	
 	List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
