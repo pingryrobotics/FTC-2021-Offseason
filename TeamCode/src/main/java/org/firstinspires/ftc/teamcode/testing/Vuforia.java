@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/ConceptVuforiaNavigation.java
  *  ^ comments in that file explain this a lot more in depth
  */
+
 public class Vuforia {
 
 	public static final String TAG = "Vuforia Navigation";

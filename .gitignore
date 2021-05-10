@@ -88,3 +88,10 @@ lint/tmp/
 .DS_Store
 .project
 .settings/org.eclipse.buildship.core.prefs
+FtcRobotController/src/main/assets/UltimateGoal.tflite
+libs/arm64-v8a/libVuforia.so
+libs/armeabi-v7a/libVuforia.so
+libs/tensorflow-lite-0.0.0-nightly.aar
+libs/armeabi-v7a/libVuforia.so
+libs/arm64-v8a/libVuforia.so
+FtcRobotController/src/main/assets/UltimateGoal.tflite
