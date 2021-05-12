@@ -189,7 +189,7 @@ public class Vuforia {
 
 	// location method (adapted from opmode vuforia)
 
-	public OpenGLMatrix robotPosition() {
+	public OpenGLMatrix getRobotPosition() {
 		for (VuforiaTrackable trackable : allTrackables) {
 			/**
 			 * getUpdatedRobotLocation() will return null if no new information is available since
