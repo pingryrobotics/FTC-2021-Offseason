@@ -142,12 +142,4 @@ public class AutoBlue extends LinearOpMode {
         wobbleMech.stop();
         wobbleMech.letGo();
     }
-
-    public float[] getRobotLocation() {
-		VuforiaNavigation vuforia = new VuforiaNavigation();
-
-		OpenGLMatrix location = vuforia.lastLocation;		
-
-		return location.getData();
-    }
 }
